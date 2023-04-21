@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -130,7 +131,7 @@ class MainActivity : ComponentActivity() {
                             Text(text = "Inverser les photos")
                         }
                         Button(onClick = {
-                            shouldDisposition.value= (shouldDisposition.value+1)%2
+                            shouldDisposition.value = (shouldDisposition.value + 1) % 2
                             shouldShowPhoto.value = false
                             shouldShowPhoto.value = true
 
@@ -182,12 +183,16 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun handleReverseCamera() {
-        Log.i("kilo", "Camera Reverse")
-        shouldShowCamera.value = true
-        shouldShowPhoto.value = false
-        shouldCameraFront.value = !shouldCameraFront.value
-        Log.i("kilo", shouldCameraFront.value.toString())
-
+        if (first.value) {
+            Log.i("kilo", "Camera Reverse")
+            shouldShowCamera.value = true
+            shouldShowPhoto.value = false
+            shouldCameraFront.value = !shouldCameraFront.value
+            Log.i("kilo", shouldCameraFront.value.toString())
+        }
+        else{
+            Toast.makeText(this, "Vous ne pouvez pas changer de caméra", Toast.LENGTH_SHORT).show()
+        }
     }
 
 
@@ -218,13 +223,15 @@ fun render(
 //Créer plusieurs disposition de photo
 
     if (shouldDisposition.value == 1) {
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .clickable {
-                shouldShowButton.value = !shouldShowButton.value
-                shouldShowPhoto.value = false
-                shouldShowPhoto.value = true
-            }, verticalArrangement = Arrangement.SpaceEvenly) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .clickable {
+                    shouldShowButton.value = !shouldShowButton.value
+                    shouldShowPhoto.value = false
+                    shouldShowPhoto.value = true
+                }, verticalArrangement = Arrangement.SpaceEvenly
+        ) {
             Image(
                 painter = rememberImagePainter(photoUri),
                 contentDescription = null,
